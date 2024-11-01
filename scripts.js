@@ -1,43 +1,13 @@
 import { books, authors, genres, BOOKS_PER_PAGE } from "./data.js";
+import { Book, renderBooks } from "./bookPre.js";
 
 let page = 1;
 let matches = books;
 
 // Book class to encapsulate book properties and rendering logic
-class Book {
-  constructor(id, title, authorId, image) {
-    this.id = id;
-    this.title = title;
-    this.authorId = authorId;
-    this.image = image;
-  }
-
-  render() {
-    const element = document.createElement("button");
-    element.classList.add("preview");
-    element.setAttribute("data-preview", this.id);
-    element.innerHTML = `
-            <img class="preview__image" src="${this.image}" />
-            <div class="preview__info">
-                <h3 class="preview__title">${this.title}</h3>
-                <div class="preview__author">${authors[this.authorId]}</div>
-            </div>
-        `;
-    return element;
-  }
-}
-
+Book;
 // Function to render books
-function renderBooks(matches) {
-  const fragment = document.createDocumentFragment();
-
-  matches.slice(0, BOOKS_PER_PAGE).forEach(({ id, title, author, image }) => {
-    const book = new Book(id, title, author, image);
-    fragment.appendChild(book.render());
-  });
-
-  document.querySelector("[data-list-items]").appendChild(fragment);
-}
+renderBooks(matches);
 
 // Function to populate dropdowns for genres and authors
 function populateDropdowns() {
@@ -224,6 +194,7 @@ const eventListeners = {
       .querySelector("[data-list-message]")
       .classList.toggle("list__message_show", matches.length < 1);
     document.querySelector("[data-list-items]").innerHTML = "";
+    document.querySelector("[data-search-overlay]").open = false;
     renderBooks(matches);
     updateShowMoreButton();
   },
